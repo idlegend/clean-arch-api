@@ -1,0 +1,7 @@
+@'
+node_modules
+dist
+*.log
+.env
+.env.*
+'@ | Set-Content -Encoding utf8 .dockerignore
