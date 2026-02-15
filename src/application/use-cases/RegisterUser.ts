@@ -2,6 +2,7 @@ import { UserRepository } from "../../domain/repositories/UserRepository";
 import { User } from "../../domain/entities/User";
 import bcrypt from "bcrypt";
 import { randomUUID } from "crypto";
+import { AppError } from "../../interfaces/shared/errors/AppError";
 
 export class RegisterUser {
   constructor(private userRepository: UserRepository) {}
@@ -10,7 +11,7 @@ export class RegisterUser {
     const existingUser = await this.userRepository.findByEmail(email);
 
     if (existingUser) {
-      throw new Error("User already exists");
+      throw new AppError("User already exists", 409);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
