@@ -13,5 +13,23 @@ model User {
   name      String
   email     String   @unique
   password  String
+  role          String   @default("USER")
   createdAt DateTime @default(now())
+
+  sessions Session[]
 }
+
+model Session {
+  id            String   @id @default(uuid())
+  userId        String
+  refreshToken  String
+  userAgent     String?
+  ipAddress     String?
+  createdAt     DateTime @default(now())
+  expiresAt     DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+   @@index([userId])
+}
+

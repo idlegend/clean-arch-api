@@ -21,6 +21,7 @@ export class RegisterUser {
       name,
       email,
       hashedPassword,
+      "USER", 
       new Date()
     );
 
