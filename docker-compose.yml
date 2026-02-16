@@ -6,7 +6,7 @@ services:
     container_name: cleanarch-api
     restart: unless-stopped
     env_file:
-      - .env
+      - .env.docker
     ports:
       - "3000:3000"
     depends_on:
