@@ -1,0 +1,58 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cleanarch-api
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    depends_on:
+      - db
+      - redis
+    networks:
+      - backend
+
+  db:
+    image: postgres:16-alpine
+    container_name: cleanarch-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: strongpassword
+      POSTGRES_DB: cleanarch
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  redis:
+    image: redis:8-alpine
+    container_name: cleanarch-redis
+    restart: unless-stopped
+    networks:
+      - backend
+
+  nginx:
+    image: nginx:alpine
+    container_name: cleanarch-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - certs:/etc/letsencrypt
+    depends_on:
+      - app
+    networks:
+      - backend
+
+volumes:
+  db-data:
+  certs:
+
+networks:
+  backend:
